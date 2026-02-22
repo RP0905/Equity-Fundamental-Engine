@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Equity Fundamental Engine</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f5f7fa;
+        }
+
+        h1, h2, h3 {
+            color: #222;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input[type=text] {
+            padding: 8px;
+            font-size: 16px;
+            width: 220px;
+        }
+
+        button {
+            padding: 8px 14px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .info-box {
+            background: white;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        table.data {
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            background: white;
+            width: auto;
+        }
+
+        table.data th, table.data td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: right;
+        }
+
+        table.data th:first-child,
+        table.data td:first-child {
+            text-align: left;
+            font-weight: bold;
+        }
+
+        table.data th {
+            background-color: #eee;
+        }
+
+        hr {
+            margin: 18px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Equity Fundamental Engine</h1>
+
+<form method="POST">
+    <label>Enter Ticker (e.g., AAPL or TCS.NS):</label><br><br>
+    <input type="text" name="ticker" required>
+    <button type="submit">Analyze</button>
+</form>
+
+
+<!-- ================= COMPANY INFO ================= -->
+
+{% if info %}
+<div class="info-box">
+    <h2>Company Information</h2>
+
+    <p><b>Name:</b> {{ info.name }}</p>
+    <p><b>Sector:</b> {{ info.sector }}</p>
+    <p><b>Industry:</b> {{ info.industry }}</p>
+    <p><b>Country:</b> {{ info.country }}</p>
+    <p><b>Market Cap:</b> {{ info.market_cap }}</p>
+    <p><b>PE Ratio:</b> {{ info.pe }}</p>
+    <p><b>Dividend Yield:</b> {{ info.dividend }}</p>
+</div>
+{% endif %}
+
+
+<!-- ================= FUNDAMENTAL CHECKLIST ================= -->
+
+{% if ratios %}
+<div class="info-box">
+    <h2>Fundamental Checklist</h2>
+
+    <h3>⭐ Core Quality</h3>
+    <p><b>ROE:</b> {{ ratios.get("ROE", "N/A") }}</p>
+    <p><b>ROCE:</b> {{ ratios.get("ROCE", "N/A") }}</p>
+    <p><b>Revenue CAGR:</b> {{ ratios.get("Revenue CAGR", "N/A") }}</p>
+    <p><b>Profit CAGR:</b> {{ ratios.get("Profit CAGR", "N/A") }}</p>
+    <p><b>Operating Margin:</b> {{ ratios.get("Operating Margin", "N/A") }}</p>
+
+    <hr>
+
+    <h3>⭐ Safety</h3>
+    <p><b>Debt-Equity:</b> {{ ratios.get("Debt-Equity", "N/A") }}</p>
+    <p><b>Interest Coverage:</b> {{ ratios.get("Interest Coverage", "N/A") }}</p>
+    <p><b>Cash Flow Strength:</b> {{ ratios.get("Cash Flow Strength", "N/A") }}</p>
+
+    <hr>
+
+    <h3>⭐ Valuation</h3>
+    <p><b>P/E:</b> {{ ratios.get("P/E", info.pe if info else "N/A") }}</p>
+    <p><b>P/B:</b> {{ ratios.get("P/B", "N/A") }}</p>
+    <p><b>EV/EBITDA:</b> {{ ratios.get("EV/EBITDA", "N/A") }}</p>
+
+    <hr>
+
+    <h3>⭐ Ownership</h3>
+    <p><b>Promoter Holding:</b> {{ ratios.get("Promoter Holding", "N/A") }}</p>
+    <p><b>Institutional Holding:</b> {{ ratios.get("Institutional Holding", "N/A") }}</p>
+
+    <hr>
+
+    <h3>⭐ Market Behavior</h3>
+    <p><b>Relative Strength:</b> {{ ratios.get("Relative Strength", "N/A") }}</p>
+    <p><b>Trend:</b> {{ ratios.get("Trend", "N/A") }}</p>
+    <p><b>Volatility:</b> {{ ratios.get("Volatility", "N/A") }}</p>
+
+</div>
+{% endif %}
+
+
+<!-- ================= TABLES (UNCHANGED) ================= -->
+
+{% if tables %}
+
+<h2>Income Statement (Last 5 Years)</h2>
+{{ tables.income|safe }}
+
+<h2>Cash Flow (Last 5 Years)</h2>
+{{ tables.cash|safe }}
+
+<h2>Balance Sheet (Last 5 Years)</h2>
+{{ tables.balance|safe }}
+
+{% endif %}
+
+</body>
+</html>
