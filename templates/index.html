@@ -1,158 +1,496 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Equity Fundamental Engine</title>
+<html lang="en" class="dark">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equity Fundamental Engine</title>
+    <!-- Using Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        slate: {
+                            850: '#151e2e',
+                            950: '#0a0f18',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                        'slide-up': 'slideUp 0.6s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background-color: #f5f7fa;
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0f18;
+            /* slate-950 */
+            background-image: radial-gradient(circle at top center, #151e2e 0%, #0a0f18 100%);
+            background-attachment: fixed;
         }
 
-        h1, h2, h3 {
-            color: #222;
+        /* Custom scrollbar for dark mode */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
 
-        form {
-            margin-bottom: 20px;
+        ::-webkit-scrollbar-track {
+            background: #0a0f18;
         }
 
-        input[type=text] {
-            padding: 8px;
-            font-size: 16px;
-            width: 220px;
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+            border: 2px solid #0a0f18;
         }
 
-        button {
-            padding: 8px 14px;
-            font-size: 16px;
-            cursor: pointer;
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
         }
 
-        .info-box {
-            background: white;
-            padding: 15px;
-            margin-bottom: 25px;
-            border-radius: 6px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        table.data {
+        /* Beautiful styling for the injected Pandas HTML tables */
+        .dataframe-container table {
+            width: 100%;
             border-collapse: collapse;
-            margin-bottom: 30px;
-            background: white;
-            width: auto;
-        }
-
-        table.data th, table.data td {
-            border: 1px solid #ccc;
-            padding: 8px 12px;
-            text-align: right;
-        }
-
-        table.data th:first-child,
-        table.data td:first-child {
             text-align: left;
-            font-weight: bold;
+            white-space: nowrap;
         }
 
-        table.data th {
-            background-color: #eee;
+        .dataframe-container thead th {
+            background-color: #0f172a;
+            /* slate-900 */
+            color: #94a3b8;
+            /* slate-400 */
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid #1e293b;
+            /* slate-800 */
         }
 
-        hr {
-            margin: 18px 0;
+        .dataframe-container tbody tr {
+            border-bottom: 1px solid #1e293b;
+            transition: background-color 0.2s ease;
+        }
+
+        .dataframe-container tbody tr:hover {
+            background-color: #1e293b;
+            /* slate-800 */
+        }
+
+        .dataframe-container tbody td {
+            padding: 1rem 1.25rem;
+            color: #cbd5e1;
+            /* slate-300 */
+            font-size: 0.875rem;
+        }
+
+        /* Style the index column slightly differently if it exists */
+        .dataframe-container tbody th {
+            padding: 1rem 1.25rem;
+            color: #e2e8f0;
+            font-weight: 500;
+            background-color: #0f172a;
+            border-bottom: 1px solid #1e293b;
         }
     </style>
 </head>
 
-<body>
+<body class="text-slate-300 antialiased min-h-screen flex flex-col selection:bg-blue-500/30">
 
-<h1>Equity Fundamental Engine</h1>
+    <!-- Header Section -->
+    <header
+        class="bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/80 shadow-sm sticky top-0 z-30 animate-fade-in">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <!-- Decorative Icon with Glow -->
+                <div class="relative flex items-center justify-center">
+                    <div class="absolute inset-0 bg-blue-500 blur-lg opacity-40 rounded-full animate-pulse"></div>
+                    <div class="bg-slate-900 border border-slate-700 p-2.5 rounded-xl relative z-10 shadow-lg">
+                        <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                        </svg>
+                    </div>
+                </div>
+                <h1 class="text-2xl font-bold tracking-tight text-white">
+                    Equity<span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 font-extrabold ml-1">Fundamental</span>Engine
+                </h1>
+            </div>
+            <div
+                class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/50 border border-slate-800">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-xs font-medium text-slate-400">System Online</span>
+            </div>
+        </div>
+    </header>
 
-<form method="POST">
-    <label>Enter Ticker (e.g., AAPL or TCS.NS):</label><br><br>
-    <input type="text" name="ticker" required>
-    <button type="submit">Analyze</button>
-</form>
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 py-10 w-full relative">
 
+        <!-- Decorative Background Glows -->
+        <div
+            class="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full pointer-events-none -z-10">
+        </div>
+        <div
+            class="absolute top-40 right-1/4 w-96 h-96 bg-indigo-600/10 blur-[120px] rounded-full pointer-events-none -z-10">
+        </div>
 
-<!-- ================= COMPANY INFO ================= -->
+        <!-- Search Form Section -->
+        <div
+            class="bg-slate-900/60 backdrop-blur-md rounded-[2rem] shadow-2xl border border-slate-700/50 p-8 md:p-12 mb-12 text-center max-w-3xl mx-auto relative overflow-hidden group animate-slide-up">
+            <div
+                class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 opacity-80">
+            </div>
 
-{% if info %}
-<div class="info-box">
-    <h2>Company Information</h2>
+            <h2 class="text-3xl md:text-4xl font-extrabold mb-4 text-white tracking-tight">Market Intelligence <span
+                    class="text-blue-400">Hub</span></h2>
+            <p class="text-slate-400 mb-10 text-base md:text-lg max-w-xl mx-auto leading-relaxed">Enter a ticker symbol
+                to analyze real-time fundamental and technical metrics powered by advanced market data.</p>
 
-    <p><b>Name:</b> {{ info.name }}</p>
-    <p><b>Sector:</b> {{ info.sector }}</p>
-    <p><b>Industry:</b> {{ info.industry }}</p>
-    <p><b>Country:</b> {{ info.country }}</p>
-    <p><b>Market Cap:</b> {{ info.market_cap }}</p>
-    <p><b>PE Ratio:</b> {{ info.pe }}</p>
-    <p><b>Dividend Yield:</b> {{ info.dividend }}</p>
-</div>
-{% endif %}
+            <form method="POST" action="/" class="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto">
+                <div class="relative flex-grow">
+                    <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                        <svg class="h-6 w-6 text-slate-500 group-focus-within:text-blue-400 transition-colors"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                    <input type="text" name="ticker" id="ticker" required placeholder="e.g., AAPL, MSFT, TSLA"
+                        class="block w-full pl-14 pr-4 py-4 md:py-5 text-lg border border-slate-700 rounded-2xl leading-5 bg-slate-950/80 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-400 uppercase transition-all shadow-inner font-semibold">
+                </div>
+                <button type="submit"
+                    class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-lg py-4 md:py-5 px-10 rounded-2xl transition-all shadow-[0_0_20px_rgba(37,99,235,0.25)] hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-blue-500 whitespace-nowrap active:scale-95 flex items-center justify-center gap-2">
+                    Analyze Engine
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                </button>
+            </form>
+        </div>
 
+        <!-- Data Display Section -->
+        {% if data %}
+        {% if data.error %}
+        <!-- Error State -->
+        <div class="bg-red-950/30 border border-red-900/50 p-6 md:p-8 rounded-3xl shadow-2xl max-w-2xl mx-auto backdrop-blur-sm relative overflow-hidden animate-slide-up"
+            style="animation-delay: 0.1s;">
+            <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-red-500"></div>
+            <div class="flex items-start">
+                <div class="flex-shrink-0 bg-red-500/10 border border-red-500/20 p-3 rounded-xl mr-5">
+                    <svg class="h-8 w-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-red-300 mb-2">Analysis Failed</h3>
+                    <p class="text-base text-red-200/80 leading-relaxed">{{ data.error }}</p>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <!-- Success State: Header -->
+        <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between border-b border-slate-800/80 pb-6 animate-slide-up"
+            style="animation-delay: 0.1s;">
+            <div>
+                <p class="text-slate-400 text-sm font-semibold uppercase tracking-widest mb-2 text-blue-400">Analysis
+                    Results For</p>
+                <h2 class="text-5xl md:text-6xl font-black text-white tracking-tighter">{{ request.form.ticker }}</h2>
+            </div>
+            <div class="mt-4 md:mt-0">
+                <div
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 border border-slate-700/50 shadow-sm">
+                    <span class="relative flex h-3 w-3">
+                        <span
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+                    </span>
+                    <span class="text-sm font-medium text-slate-300">Live Snapshot</span>
+                </div>
+            </div>
+        </div>
 
-<!-- ================= FUNDAMENTAL CHECKLIST ================= -->
+        <!-- Company Info Section -->
+        {% if data.company_info %}
+        <div class="mb-10 animate-slide-up" style="animation-delay: 0.2s;">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="p-2 bg-slate-800 border border-slate-700 rounded-lg shadow-sm">
+                    <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-white tracking-tight">Company Profile</h3>
+            </div>
 
-{% if ratios %}
-<div class="info-box">
-    <h2>Fundamental Checklist</h2>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {% for key, value in data.company_info.items() %}
+                <li
+                    class="flex flex-col p-5 bg-slate-900/80 backdrop-blur-sm rounded-2xl border border-slate-800/80 hover:bg-slate-800 hover:border-slate-700 transition-all shadow-sm">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+                        {{ key | replace('_',' ') | title }}
+                    </span>
+                    <span class="text-base font-bold text-slate-100 break-words">
+                        {{ value if value else "N/A" }}
+                    </span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
 
-    <h3>⭐ Core Quality</h3>
-    <p><b>ROE:</b> {{ ratios.get("ROE", "N/A") }}</p>
-    <p><b>ROCE:</b> {{ ratios.get("ROCE", "N/A") }}</p>
-    <p><b>Revenue CAGR:</b> {{ ratios.get("Revenue CAGR", "N/A") }}</p>
-    <p><b>Profit CAGR:</b> {{ ratios.get("Profit CAGR", "N/A") }}</p>
-    <p><b>Operating Margin:</b> {{ ratios.get("Operating Margin", "N/A") }}</p>
+        <!-- Core Metrics Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
 
-    <hr>
+            <!-- Fundamentals Card -->
+            <div class="bg-slate-900/80 backdrop-blur-sm rounded-3xl shadow-xl border border-slate-800/80 overflow-hidden hover:border-slate-700 transition-colors flex flex-col animate-slide-up"
+                style="animation-delay: 0.3s;">
+                <div
+                    class="bg-slate-850/80 border-b border-slate-800 px-6 md:px-8 py-5 flex items-center justify-between sticky top-0 z-10">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+                            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-white tracking-tight">Core Fundamentals</h3>
+                    </div>
+                </div>
+                <div class="p-6 md:p-8 flex-grow">
+                    <ul class="space-y-2">
+                        {% for key, value in data.fundamentals.items() %}
+                        <li
+                            class="px-4 py-3 rounded-xl hover:bg-slate-800/50 flex justify-between items-center group transition-colors border border-transparent hover:border-slate-700/50">
+                            <span
+                                class="text-sm font-medium text-slate-400 group-hover:text-slate-200 transition-colors">
+                                {{ key | replace('_', ' ') | title }}
+                            </span>
+                            <span
+                                class="text-sm font-mono font-bold text-slate-100 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800 shadow-sm">
+                                {% if value is none or value == '' %}
+                                N/A
+                                {% elif value is number %}
+                                {% if "cagr" in key %}
+                                {{ value }}%
+                                {% else %}
+                                {{ "{:,}".format(value) }}
+                                {% endif %}
+                                {% else %}
+                                {{ value }}
+                                {% endif %}
+                            </span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
 
-    <h3>⭐ Safety</h3>
-    <p><b>Debt-Equity:</b> {{ ratios.get("Debt-Equity", "N/A") }}</p>
-    <p><b>Interest Coverage:</b> {{ ratios.get("Interest Coverage", "N/A") }}</p>
-    <p><b>Cash Flow Strength:</b> {{ ratios.get("Cash Flow Strength", "N/A") }}</p>
+            <!-- Technicals Card -->
+            <div class="bg-slate-900/80 backdrop-blur-sm rounded-3xl shadow-xl border border-slate-800/80 overflow-hidden hover:border-slate-700 transition-colors flex flex-col animate-slide-up"
+                style="animation-delay: 0.4s;">
+                <div
+                    class="bg-slate-850/80 border-b border-slate-800 px-6 md:px-8 py-5 flex items-center justify-between sticky top-0 z-10">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-purple-500/10 border border-purple-500/20 rounded-lg">
+                            <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-white tracking-tight">Technical Indicators</h3>
+                    </div>
+                </div>
+                <div class="p-6 md:p-8 flex-grow">
+                    <ul class="space-y-2">
+                        {% for key, value in data.technicals.items() %}
+                        <li
+                            class="px-4 py-3 rounded-xl hover:bg-slate-800/50 flex justify-between items-center group transition-colors border border-transparent hover:border-slate-700/50">
+                            <span
+                                class="text-sm font-medium text-slate-400 group-hover:text-slate-200 transition-colors">
+                                {{ key | replace('_', ' ') | title }}
+                            </span>
+                            <span
+                                class="text-sm font-mono font-bold text-slate-100 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800 shadow-sm text-right max-w-[55%] break-words">
+                                {% if value is none or value == '' %}
+                                N/A
+                                {% elif value is number %}
+                                {{ "{:,}".format(value) }}
+                                {% else %}
+                                {{ value }}
+                                {% endif %}
+                            </span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
 
-    <hr>
+        </div>
 
-    <h3>⭐ Valuation</h3>
-    <p><b>P/E:</b> {{ ratios.get("P/E", info.pe if info else "N/A") }}</p>
-    <p><b>P/B:</b> {{ ratios.get("P/B", "N/A") }}</p>
-    <p><b>EV/EBITDA:</b> {{ ratios.get("EV/EBITDA", "N/A") }}</p>
+        <!-- Fundamental Ratios Section -->
+        {% if data.ratios %}
+        <div class="mb-10 animate-slide-up" style="animation-delay: 0.5s;">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="p-2 bg-slate-800 border border-slate-700 rounded-lg shadow-sm">
+                    <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-white tracking-tight">Key Financial Ratios</h3>
+            </div>
 
-    <hr>
+            <ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                {% for key, value in data.ratios.items() %}
+                <li
+                    class="flex flex-col p-4 bg-slate-900/80 backdrop-blur-sm rounded-2xl border border-slate-800/80 hover:bg-slate-800 hover:border-slate-700 transition-all shadow-sm">
+                    <span class="text-xs font-medium text-slate-400 mb-2">
+                        {{ key }}
+                    </span>
+                    <span class="text-lg font-mono font-bold text-slate-100">
+                        {% if value is none or value == '' %}
+                        N/A
 
-    <h3>⭐ Ownership</h3>
-    <p><b>Promoter Holding:</b> {{ ratios.get("Promoter Holding", "N/A") }}</p>
-    <p><b>Institutional Holding:</b> {{ ratios.get("Institutional Holding", "N/A") }}</p>
+                        {% elif "cagr" in key|lower or "roe" in key|lower or "roce" in key|lower %}
+                        {{ (value * 100) | round(2) }}%
 
-    <hr>
+                        {% elif value is number %}
+                        {{ "{:.2f}".format(value) }}
 
-    <h3>⭐ Market Behavior</h3>
-    <p><b>Relative Strength:</b> {{ ratios.get("Relative Strength", "N/A") }}</p>
-    <p><b>Trend:</b> {{ ratios.get("Trend", "N/A") }}</p>
-    <p><b>Volatility:</b> {{ ratios.get("Volatility", "N/A") }}</p>
+                        {% else %}
+                        {{ value }}
+                        {% endif %}
+                    </span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
 
-</div>
-{% endif %}
+        <!-- Financial Tables Section -->
+        {% if data.tables %}
+        <div class="mt-12 space-y-12 animate-slide-up" style="animation-delay: 0.6s;">
 
+            <!-- Income Statement -->
+            <div
+                class="bg-slate-900/80 backdrop-blur-sm rounded-3xl shadow-xl border border-slate-800/80 overflow-hidden">
+                <div class="bg-slate-850/80 border-b border-slate-800 px-6 py-5">
+                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                        <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                            </path>
+                        </svg>
+                        Income Statement
+                    </h3>
+                </div>
+                <div class="overflow-x-auto p-1 dataframe-container">
+                    {{ data.tables.income | safe }}
+                </div>
+            </div>
 
-<!-- ================= TABLES (UNCHANGED) ================= -->
+            <!-- Cash Flow -->
+            <div
+                class="bg-slate-900/80 backdrop-blur-sm rounded-3xl shadow-xl border border-slate-800/80 overflow-hidden">
+                <div class="bg-slate-850/80 border-b border-slate-800 px-6 py-5">
+                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                        <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                            </path>
+                        </svg>
+                        Cash Flow
+                    </h3>
+                </div>
+                <div class="overflow-x-auto p-1 dataframe-container">
+                    {{ data.tables.cash | safe }}
+                </div>
+            </div>
 
-{% if tables %}
+            <!-- Balance Sheet -->
+            <div
+                class="bg-slate-900/80 backdrop-blur-sm rounded-3xl shadow-xl border border-slate-800/80 overflow-hidden">
+                <div class="bg-slate-850/80 border-b border-slate-800 px-6 py-5">
+                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                        <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3">
+                            </path>
+                        </svg>
+                        Balance Sheet
+                    </h3>
+                </div>
+                <div class="overflow-x-auto p-1 dataframe-container">
+                    {{ data.tables.balance | safe }}
+                </div>
+            </div>
 
-<h2>Income Statement (Last 5 Years)</h2>
-{{ tables.income|safe }}
+        </div>
+        {% endif %}
 
-<h2>Cash Flow (Last 5 Years)</h2>
-{{ tables.cash|safe }}
+        {% endif %}
+        {% else %}
+        <!-- Empty State (Initial Load) -->
+        <div
+            class="text-center py-20 px-6 border border-slate-800 rounded-[2.5rem] bg-slate-900/30 backdrop-blur-sm max-w-4xl mx-auto shadow-sm animate-fade-in">
+            <div
+                class="inline-flex items-center justify-center w-24 h-24 rounded-3xl bg-slate-800 shadow-inner mb-8 relative border border-slate-700/50">
+                <div class="absolute inset-0 bg-blue-500/20 rounded-3xl animate-pulse"></div>
+                <svg class="w-12 h-12 text-slate-400 relative z-10" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-3 tracking-tight">Awaiting Ticker Input</h3>
+            <p class="text-slate-500 max-w-md mx-auto text-lg leading-relaxed">Initialize the engine by entering a stock
+                ticker above. The system will retrieve the latest fundamental and technical metrics securely.</p>
+        </div>
+        {% endif %}
+    </main>
 
-<h2>Balance Sheet (Last 5 Years)</h2>
-{{ tables.balance|safe }}
-
-{% endif %}
+    <!-- Footer -->
+    <footer class="bg-slate-950/80 backdrop-blur-lg border-t border-slate-900 mt-auto">
+        <div class="max-w-7xl mx-auto px-6 py-10 text-center flex flex-col items-center">
+            <div class="w-16 h-1 bg-gradient-to-r from-blue-500/50 to-indigo-500/50 rounded-full mb-8"></div>
+            <p class="text-sm text-slate-500 mb-2 font-medium tracking-wide">&copy; 2026 Equity Fundamental Engine.
+                Built for Market Analysis.</p>
+            <p class="text-sm text-slate-400 font-semibold tracking-wide">Designed and created by Roheet Purkayastha</p>
+        </div>
+    </footer>
 
 </body>
+
 </html>
