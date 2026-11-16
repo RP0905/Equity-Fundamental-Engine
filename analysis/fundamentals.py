@@ -1,19 +1,5 @@
 import pandas as pd
-
-def calculate_cagr(series):
-    series = series.dropna()
-    if len(series) < 2:
-        return None
-
-    start = series.iloc[-1]
-    end = series.iloc[0]
-    years = len(series) - 1
-
-    if start <= 0:
-        return None
-
-    return (end / start) ** (1 / years) - 1
-
+from utils.formatters import calculate_cagr
 
 def get_fundamentals(data):
     info = data["info"]
@@ -40,26 +26,36 @@ def get_fundamentals(data):
             profit_cagr = calculate_cagr(profit)
             result["profit_cagr"] = round(profit_cagr * 100, 2) if profit_cagr is not None else None
 
+        # Correct Operating Margin (EBIT / Revenue)
+        if "Ebit" in financials.index and "Total Revenue" in financials.index:
+            try:
+                ebit = financials.loc["Ebit"].iloc[0]
+                revenue = financials.loc["Total Revenue"].iloc[0]
+                if revenue and revenue != 0:
+                    result["operating_margin"] = round((ebit / revenue) * 100, 2)
+            except:
+                pass
+
     # Balance Sheet
     if not balance.empty:
         debt = balance.loc["Total Debt"].iloc[0] if "Total Debt" in balance.index else None
-        equity = balance.loc["Total Stockholder Equity"].iloc[0] if "Total Stockholder Equity" in balance.index else None
+        equity = balance.loc["Stockholders Equity"].iloc[0] if "Stockholders Equity" in balance.index else None
 
         result["debt"] = debt
         result["equity"] = equity
 
-        if debt and equity and equity != 0:
-            result["debt_to_equity"] = debt / equity
+        if debt is not None and equity and equity != 0:
+            result["debt_to_equity"] = round(debt / equity, 2)
 
     # Cash Flow
     if not cashflow.empty:
-        op_cf = cashflow.loc["Total Cash From Operating Activities"].iloc[0] if "Total Cash From Operating Activities" in cashflow.index else None
-        capex = cashflow.loc["Capital Expenditures"].iloc[0] if "Capital Expenditures" in cashflow.index else None
+        op_cf = cashflow.loc["Operating Cash Flow"].iloc[0] if "Operating Cash Flow" in cashflow.index else None
+        capex = cashflow.loc["Capital Expenditure"].iloc[0] if "Capital Expenditure" in cashflow.index else None
 
         result["operating_cashflow"] = op_cf
         result["capex"] = capex
 
-        if op_cf and capex:
+        if op_cf is not None and capex is not None:
             result["free_cashflow"] = op_cf + capex
 
     return result

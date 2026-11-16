@@ -2,3 +2,13 @@ venv/
 __pycache__/
 *.pyc
 .env
+node_modules/
+.cache/
+Trade Journal/data/
+Trade Journal/trade-journal.log
+frontend/dist/
+Trade Journal/dist/
+*.log
+screener_*.csv
+screener_*.jsonl
+screener_*.json

@@ -1,0 +1,803 @@
+Created At: 2026-08-15T04:16:16Z
+Completed At: 2026-08-15T04:16:16Z
+File Path: `file:///c:/Users/ROHEET/Desktop/EquityFundamentalEngine%20-%20Original/app.py`
+Total Lines: 1469
+Total Bytes: 65024
+Showing lines 240 to 300
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+240:     if not symbol:
+241:         return jsonify({"error": "symbol required"}), 400
+242: 
+243:     # Map well-known indices to the correct yfinance ticker
+244:     INDEX_MAP = {
+245:         "NIFTY50": "^NSEI",
+246:         "NIFTY": "^NSEI",
+247:         "SENSEX": "^BSESN",
+248:         "BANKNIFTY": "^NSEBANK",
+249:     }
+250:     yf_symbol = INDEX_MAP.get(symbol)
+251:     if yf_symbol is None:
+252:         if not symbol.endswith(".NS") and not symbol.endswith(".BO"):
+253:             symbol += ".NS"
+254:         yf_symbol = symbol
+255: 
+256:     try:
+257:         stock = yf.Ticker(yf_symbol)
+258:         df = stock.history(period=period, interval="1d")
+259:         if df.empty:
+260:             return jsonify({"error": "No data"}), 404
+261:         records = []
+262:         for _unused, row in df.iterrows():
+263:             ts_seconds = int(row.name.timestamp()) if hasattr(row.name, "timestamp") else 0
+264:             records.append({
+265:                 "time": ts_seconds,
+266:                 "open": round(float(row["Open"]), 2),
+267:                 "high": round(float(row["High"]), 2),
+268:                 "low": round(float(row["Low"]), 2),
+269:                 "close": round(float(row["Close"]), 2),
+270:                 "volume": int(row["Volume"]),
+271:             })
+272:         return jsonify({"symbol": yf_symbol, "data": records})
+273:     except Exception as exc:
+274:         return jsonify({"error": str(exc)}), 500
+275: 
+276: 
+277: @app.route("/api/peers", methods=["GET"])
+278: def peers():
+279:     """Return peer comparison data for a given symbol."""
+280:     symbol = request.args.get("symbol", "").strip().upper()
+281:     if not symbol:
+282:         return jsonify({"error": "symbol required"}), 400
+283:     if not symbol.endswith(".NS"):
+284:         symbol += ".NS"
+285:     try:
+286:         stock = yf.Ticker(symbol)
+287:         info = stock.info or {}
+288:         peers_raw = info.get("peerSymbols", []) or ["HDFCBANK.NS", "ICICIBANK.NS", "SBIN.NS", "KOTAKBANK.NS", "AXISBANK.NS"]
+289:         peer_list = []
+290:         for ps in peers_raw[:8]:
+291:             try:
+292:                 ps_str = ps.strip().upper()
+293:                 if not ps_str.endswith(".NS"):
+294:                     ps_str += ".NS"
+295:                 pstock = yf.Ticker(ps_str)
+296:                 pinfo = pstock.info or {}
+297:                 peer_list.append({
+298:                     "ticker": ps_str.replace(".NS", ""),
+299:                     "price": pinfo.get("currentPrice") or pinfo.get("regularMarketPrice"),
+300:                     "pe": pinfo.get("trailingPE"),
+The above content does NOT show the entire file contents. If you need to view any lines of the file which were not shown to complete your task, call this tool again to view those lines.
+
+==================================================
+Created At: 2026-08-15T04:32:25Z
+Completed At: 2026-08-15T04:32:26Z
+File Path: `file:///c:/Users/ROHEET/Desktop/EquityFundamentalEngine%20-%20Original/app.py`
+Total Lines: 1469
+Total Bytes: 65024
+Showing lines 240 to 320
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+240:     if not symbol:
+241:         return jsonify({"error": "symbol required"}), 400
+242: 
+243:     # Map well-known indices to the correct yfinance ticker
+244:     INDEX_MAP = {
+245:         "NIFTY50": "^NSEI",
+246:         "NIFTY": "^NSEI",
+247:         "SENSEX": "^BSESN",
+248:         "BANKNIFTY": "^NSEBANK",
+249:     }
+250:     yf_symbol = INDEX_MAP.get(symbol)
+251:     if yf_symbol is None:
+252:         if not symbol.endswith(".NS") and not symbol.endswith(".BO"):
+253:             symbol += ".NS"
+254:         yf_symbol = symbol
+255: 
+256:     try:
+257:         stock = yf.Ticker(yf_symbol)
+258:         df = stock.history(period=period, interval="1d")
+259:         if df.empty:
+260:             return jsonify({"error": "No data"}), 404
+261:         records = []
+262:         for _unused, row in df.iterrows():
+263:             ts_seconds = int(row.name.timestamp()) if hasattr(row.name, "timestamp") else 0
+264:             records.append({
+265:                 "time": ts_seconds,
+266:                 "open": round(float(row["Open"]), 2),
+267:                 "high": round(float(row["High"]), 2),
+268:                 "low": round(float(row["Low"]), 2),
+269:                 "close": round(float(row["Close"]), 2),
+270:                 "volume": int(row["Volume"]),
+271:             })
+272:         return jsonify({"symbol": yf_symbol, "data": records})
+273:     except Exception as exc:
+274:         return jsonify({"error": str(exc)}), 500
+275: 
+276: 
+277: @app.route("/api/peers", methods=["GET"])
+278: def peers():
+279:     """Return peer comparison data for a given symbol."""
+280:     symbol = request.args.get("symbol", "").strip().upper()
+281:     if not symbol:
+282:         return jsonify({"error": "symbol required"}), 400
+283:     if not symbol.endswith(".NS"):
+284:         symbol += ".NS"
+285:     try:
+286:         stock = yf.Ticker(symbol)
+287:         info = stock.info or {}
+288:         peers_raw = info.get("peerSymbols", []) or ["HDFCBANK.NS", "ICICIBANK.NS", "SBIN.NS", "KOTAKBANK.NS", "AXISBANK.NS"]
+289:         peer_list = []
+290:         for ps in peers_raw[:8]:
+291:             try:
+292:                 ps_str = ps.strip().upper()
+293:                 if not ps_str.endswith(".NS"):
+294:                     ps_str += ".NS"
+295:                 pstock = yf.Ticker(ps_str)
+296:                 pinfo = pstock.info or {}
+297:                 peer_list.append({
+298:                     "ticker": ps_str.replace(".NS", ""),
+299:                     "price": pinfo.get("currentPrice") or pinfo.get("regularMarketPrice"),
+300:                     "pe": pinfo.get("trailingPE"),
+301:                     "mktCap": pinfo.get("marketCap"),
+302:                 })
+303:             except Exception:
+304:                 continue
+305:         return jsonify({"peers": peer_list})
+306:     except Exception as exc:
+307:         return jsonify({"error": str(exc)}), 500
+308: 
+309: 
+310: @app.route("/api/screener", methods=["POST"])
+311: def screener():
+312:     """Screen stocks using the Excel/Google-Sheets pipeline by default."""
+313:     try:
+314:         filters = request.get_json(silent=True) or {}
+315:         print("=== Screener received filters ===")
+316:         print(filters)
+317:         
+318:         use_local = filters.get("use_local_db", False)
+319:         if use_local:
+320:             print("[screener] Using LOCAL DB engine")
+The above content does NOT show the entire file contents. If you need to view any lines of the file which were not shown to complete your task, call this tool again to view those lines.
+
+==================================================
+Created At: 2026-08-15T04:33:01Z
+Completed At: 2026-08-15T04:33:01Z
+File Path: `file:///c:/Users/ROHEET/Desktop/EquityFundamentalEngine%20-%20Original/app.py`
+Total Lines: 1469
+Total Bytes: 65024
+Showing lines 1100 to 1469
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+1100:                 "results": trimmed,
+1101:                 "count": len(trimmed),
+1102:                 "meta": {
+1103:                     "source": "spreadsheet_metric_cache",
+1104:                     "master_universe_count": len(master_index),
+1105:                     "symbols_evaluated": len(rows_to_scan),
+1106:                     "matches_before_limit": len(results),
+1107:                     "matches_returned": len(trimmed),
+1108:                     "fetch_failures": max(0, len(master_index if max_symbols is None else master_index[:max_symbols]) - len(rows_to_scan)),
+1109:                     "cache_path": str(SPREADSHEET_METRIC_CACHE_PATH),
+1110:                     "cache_rows": len(cached_rows),
+1111:                     "enrich_yahoo": False,
+1112:                     "yahoo_fallback": bool(filters.get("yahoo_fallback", True)),
+1113:                     "yahoo_fill_counts": yahoo_fill_counts,
+1114:                     "yahoo_miss_counts": yahoo_miss_counts,
+1115:                     "yahoo_cache_path": str(YAHOO_METRIC_CACHE_PATH),
+1116:                     "parallel_workers": 0,
+1117:                     "max_symbols": scan_label,
+1118:                     "filter_rules": filter_rules,
+1119:                     "strict_missing_metrics": strict_missing_metrics,
+1120:                     "missing_metric_counts": missing_metric_counts,
+1121:                     "rule_fail_counts": rule_fail_counts,
+1122:                 },
+1123:             }
+1124:     candidates = master_index[:max_symbols] if max_symbols else master_index
+1125:     missing_metric_counts = {}
+1126:     rule_fail_counts = {}
+1127:     yahoo_fill_counts = {}
+1128:     yahoo_miss_counts = {}
+1129:     use_yahoo_fallback = bool(filters.get("yahoo_fallback", True))
+1130:     yahoo_cache = _load_yahoo_metric_cache() if use_yahoo_fallback else {}
+1131:     stats_lock = threading.Lock()
+1132:     
+1133:     def process_entry(entry):
+1134:         import signal, threading
+1135:         try:
+1136:             # Per-stock timeout: skip any sheet that takes > 15 s to download
+1137:             result_holder = [None]
+1138:             error_holder = [None]
+1139:             def _fetch():
+1140:                 try:
+1141:                     result_holder[0] = _load_workbook(entry["sheet_id"])
+1142:                 except Exception as exc:
+1143:                     error_holder[0] = exc
+1144:             t = threading.Thread(target=_fetch, daemon=True)
+1145:             t.start()
+1146:             t.join(timeout=15)
+1147:             if t.is_alive() or error_holder[0] is not None:
+1148:                 print(f"[screener] TIMEOUT/ERROR loading sheet for {entry['name']}: {error_holder[0]}")
+1149:                 return None
+1150:             workbook = result_holder[0]
+1151:             if workbook is None:
+1152:                 return None
+1153:             data_sheet = _parse_data_sheet(workbook["Data Sheet"])
+1154:             _, pnl_rows = _parse_profit_loss_sheet(workbook["Profit & Loss"])
+1155:             calculated = _calculate_fundamentals(data_sheet, pnl_rows)
+1156: 
+1157:             # Extract all possible metrics
+1158:             metrics = {
+1159:                 # Valuation
+1160:                 "market capitalization": data_sheet["market_cap_cr"],
+1161:                 "market cap": data_sheet["market_cap_cr"],
+1162:                 "current price": data_sheet["current_price"],
+1163:                 "price": data_sheet["current_price"],
+1164:                 
+1165:                 # Profitability
+1166:                 "roe": _latest(calculated["roe"]),
+1167:                 "return on equity": _latest(calculated["roe"]),
+1168:                 "roce": _latest(calculated["roce"]),
+1169:                 "return on capital employed": _latest(calculated["roce"]),
+1170:                 "net margin": _latest(calculated["net_margin"]),
+1171:                 "net profit margin": _latest(calculated["net_margin"]),
+1172:                 "operating margin": _latest(calculated["operating_margin"]),
+1173:                 "opm": _latest(calculated["operating_margin"]),
+1174:                 
+1175:                 # Leverage
+1176:                 "debt to equity": _latest(calculated["debt_to_equity"]),
+1177:                 "debt/equity": _latest(calculated["debt_to_equity"]),
+1178:                 "d/e": _latest(calculated["debt_to_equity"]),
+1179:                 "interest coverage": _latest(calculated["interest_coverage"]),
+1180:                 "interest coverage ratio": _latest(calculated["interest_coverage"]),
+1181:                 
+1182:                 # Growth
+1183:                 "sales growth 3y": calculated["revenue_cagr_3y"],
+1184:                 "sales growth 3years": calculated["revenue_cagr_3y"],
+1185:                 "sales growth 5y": calculated["revenue_cagr_5y"],
+1186:                 "sales growth 5years": calculated["revenue_cagr_5y"],
+1187:                 "profit growth 3y": calculated["profit_cagr_3y"],
+1188:                 "profit growth 3years": calculated["profit_cagr_3y"],
+1189:                 "profit growth 5y": calculated["profit_cagr_5y"],
+1190:                 "profit growth 5years": calculated["profit_cagr_5y"],
+1191:                 "revenue growth 3y": calculated["revenue_cagr_3y"],
+1192:                 "revenue growth 3years": calculated["revenue_cagr_3y"],
+1193:                 "revenue growth 5y": calculated["revenue_cagr_5y"],
+1194:                 "revenue growth 5years": calculated["revenue_cagr_5y"],
+1195:                 "sales growth": calculated["revenue_cagr_3y"],
+1196:                 "profit growth": calculated["profit_cagr_3y"],
+1197:                 
+1198:                 # Per share
+1199:                 "eps": _latest(calculated["eps"]),
+1200:                 "book value per share": _latest(calculated["book_value_per_share"]),
+1201:                 "bvps": _latest(calculated["book_value_per_share"]),
+1202:                 
+1203:                 # Income statement
+1204:                 "sales": _latest(calculated["sales"]),
+1205:                 "revenue": _latest(calculated["sales"]),
+1206:                 "net profit": _latest(calculated["net_profit"]),
+1207:                 "pat": _latest(calculated["net_profit"]),
+1208:                 "operating profit": _latest(calculated["operating_profit"]),
+1209:                 "ebitda": _latest(calculated["operating_profit"]),
+1210:                 
+1211:                 # Balance sheet
+1212:                 "total assets": _latest(calculated["total_assets"]),
+1213:                 "borrowings": _latest(calculated["borrowings"]),
+1214:                 "debt": _latest(calculated["borrowings"]),
+1215:                 
+1216:                 # Cash flow
+1217:                 "cfo": _latest(calculated["cfo"]),
+1218:                 "cash from operations": _latest(calculated["cfo"]),
+1219:                 "cash flow from operating": _latest(calculated["cfo"]),
+1220:                 "fcf": _latest(calculated["fcf"]),
+1221:                 "free cash flow": _latest(calculated["fcf"]),
+1222:                 
+1223:                 # Shareholding
+1224:                 "promoter holding": data_sheet.get("promoter_holding"),
+1225:                 "pledged percentage": data_sheet.get("pledged_percentage", 0),
+1226:                 
+1227:                 # Efficiency
+1228:                 "asset turnover": _latest(calculated["asset_turnover"]) if "asset_turnover" in calculated else None,
+1229:                 "working capital": _latest(calculated["working_capital"]) if "working_capital" in calculated else None,
+1230:             }
+1231: 
+1232:             # Add some computed PE/PB if possible
+1233:             latest_eps = _latest(calculated["eps"])
+1234:             latest_bvps = _latest(calculated["book_value_per_share"])
+1235:             if data_sheet["current_price"] and latest_eps and latest_eps > 0:
+1236:                 metrics["pe"] = data_sheet["current_price"] / latest_eps
+1237:                 metrics["price to earning"] = data_sheet["current_price"] / latest_eps
+1238:                 metrics["price to earnings"] = data_sheet["current_price"] / latest_eps
+1239:                 metrics["p/e"] = data_sheet["current_price"] / latest_eps
+1240:             
+1241:             if data_sheet["current_price"] and latest_bvps and latest_bvps > 0:
+1242:                 metrics["pb"] = data_sheet["current_price"] / latest_bvps
+1243:                 metrics["price to book"] = data_sheet["current_price"] / latest_bvps
+1244:                 metrics["price to book value"] = data_sheet["current_price"] / latest_bvps
+1245:                 metrics["p/b"] = data_sheet["current_price"] / latest_bvps
+1246: 
+1247:             # Debug: log key metrics for every stock being evaluated
+1248:             print(f"[screener] {entry['name']}: market_cap_cr={data_sheet['market_cap_cr']!r}, price={data_sheet['current_price']!r}")
+1249: 
+1250:             # Apply filter rules
+1251:             passes = True
+1252:             for rule_idx, rule in enumerate(filter_rules):
+1253:                 key, metric_value = _metric_lookup(metrics, rule["label"])
+1254:                 if metric_value is None:
+1255:                     yahoo_value = None
+1256:                     if use_yahoo_fallback:
+1257:                         with stats_lock:
+1258:                             yahoo_metrics = _get_yahoo_metrics_for_row({"name": entry["name"]}, yahoo_cache)
+1259:                         _, yahoo_value = _metric_lookup(yahoo_metrics, rule["label"])
+1260:                     if yahoo_value is not None:
+1261:                         metrics[key] = yahoo_value
+1262:                         metric_value = yahoo_value
+1263:                         with stats_lock:
+1264:                             yahoo_fill_counts[key] = yahoo_fill_counts.get(key, 0) + 1
+1265:                         print(f"[screener]   rule '{key}' filled from Yahoo for {entry['name']}: {yahoo_value!r}")
+1266:                     else:
+1267:                         with stats_lock:
+1268:                             missing_metric_counts[key] = missing_metric_counts.get(key, 0) + 1
+1269:                             if use_yahoo_fallback:
+1270:                                 yahoo_miss_counts[key] = yahoo_miss_counts.get(key, 0) + 1
+1271:                         print(f"[screener]   rule '{key}' missing for {entry['name']}")
+1272:                         if strict_missing_metrics:
+1273:                             passes = False
+1274:                             break
+1275:                         continue
+1276: 
+1277:                 op = rule["operator"]
+1278:                 target = rule["value"]
+1279:                 rule_pass = _compare_metric(metric_value, op, target)
+1280: 
+1281:                 print(f"[screener]   rule '{key}' {op} {target}: metric={metric_value!r} -> {'PASS' if rule_pass else 'FAIL'}")
+1282:                 if not rule_pass:
+1283:                     with stats_lock:
+1284:                         rule_fail_counts[key] = rule_fail_counts.get(key, 0) + 1
+1285:                     passes = False
+1286:                     break
+1287:             
+1288:             if passes:
+1289:                 return {
+1290:                     "symbol": entry["name"].replace(" ", ""),
+1291:                     "name": entry["name"],
+1292:                     "sheetUrl": entry["url"],
+1293:                     "price": data_sheet["current_price"],
+1294:                     "market_cap_cr": data_sheet["market_cap_cr"],
+1295:                     "pe": metrics.get("pe"),
+1296:                     "roe": _latest(calculated["roe"]),
+1297:                     "roce": _latest(calculated["roce"]),
+1298:                     "debt_to_equity": _latest(calculated["debt_to_equity"]),
+1299:                     "company_name": data_sheet["company_name"],
+1300:                     "yahoo_symbol": None,
+1301:                 }
+1302:         except Exception as e:
+1303:             print(f"Error processing {entry['name']}: {e}")
+1304:         return None
+1305: 
+1306:     results = []
+1307:     fetch_failures = 0
+1308:     with ThreadPoolExecutor(max_workers=workers) as executor:
+1309:         futures = [executor.submit(process_entry, entry) for entry in candidates]
+1310:         for f in as_completed(futures):
+1311:             try:
+1312:                 res = f.result()
+1313:             except Exception:
+1314:                 fetch_failures += 1
+1315:                 continue
+1316:             if res:
+1317:                 results.append(res)
+1318: 
+1319:     results.sort(key=lambda row: (row.get("market_cap_cr") is None, -(row.get("market_cap_cr") or 0)))
+1320:     trimmed = results[:max(1, min(result_limit, 500))]
+1321:     yahoo_enriched = 0
+1322:     for row in trimmed:
+1323:         if not enrich_yahoo:
+1324:             row["yahoo_symbol"] = None
+1325:             row.pop("company_name", None)
+1326:             continue
+1327:         yahoo_symbol = _resolve_yahoo_symbol(row["name"], row.get("company_name") or row["name"])
+1328:         row["yahoo_symbol"] = yahoo_symbol
+1329:         if not yahoo_symbol:
+1330:             row.pop("company_name", None)
+1331:             continue
+1332:         try:
+1333:             yahoo_bundle = get_stock_data(yahoo_symbol)
+1334:             yahoo_info = yahoo_bundle.get("info", {}) if yahoo_bundle else {}
+1335:         except Exception:
+1336:             yahoo_info = {}
+1337:         live_price = yahoo_info.get("currentPrice") or yahoo_info.get("regularMarketPrice")
+1338:         market_cap_live = yahoo_info.get("marketCap")
+1339:         if live_price is not None:
+1340:             row["price"] = live_price
+1341:         if market_cap_live:
+1342:             row["market_cap_cr"] = round(market_cap_live / 1e7, 2)
+1343:         if yahoo_info.get("trailingPE") is not None:
+1344:             row["pe"] = yahoo_info.get("trailingPE")
+1345:         yahoo_enriched += 1
+1346:         row.pop("company_name", None)
+1347:     return {
+1348:         "results": trimmed,
+1349:         "count": len(trimmed),
+1350:         "meta": {
+1351:             "source": "excel_url_primary_yahoo_optional",
+1352:             "master_universe_count": len(master_index),
+1353:             "symbols_evaluated": len(candidates),
+1354:             "matches_before_limit": len(results),
+1355:             "matches_returned": len(trimmed),
+1356:             "fetch_failures": fetch_failures,
+1357:             "yahoo_enriched": yahoo_enriched,
+1358:             "enrich_yahoo": enrich_yahoo,
+1359:             "yahoo_fallback": use_yahoo_fallback,
+1360:             "yahoo_fill_counts": yahoo_fill_counts,
+1361:             "yahoo_miss_counts": yahoo_miss_counts,
+1362:             "yahoo_cache_path": str(YAHOO_METRIC_CACHE_PATH),
+1363:             "parallel_workers": workers,
+1364:             "max_symbols": scan_label,
+1365:             "filter_rules": filter_rules,
+1366:             "strict_missing_metrics": strict_missing_metrics,
+1367:             "missing_metric_counts": missing_metric_counts,
+1368:             "rule_fail_counts": rule_fail_counts,
+1369:         },
+1370:     }
+1371: 
+1372: 
+1373: def df_to_json(df, max_cols=6, quarterly=False):
+1374:     """Convert a pandas DataFrame to a JSON-serialisable dict."""
+1375:     if df is None or df.empty:
+1376:         return {"columns": [], "rows": {}}
+1377:     try:
+1378:         if quarterly:
+1379:             df = df.iloc[:, :max_cols]
+1380:         else:
+1381:             year_cols = [c for c in df.columns if hasattr(c, "year") and c.year >= 2019]
+1382:             if len(year_cols) >= 3:
+1383:                 df = df[year_cols]
+1384:             df = df.iloc[:, :max_cols]
+1385: 
+1386:         columns = []
+1387:         for c in df.columns:
+1388:             try:
+1389:                 if hasattr(c, "strftime"):
+1390:                     columns.append(c.strftime("%Y-%m-%d"))
+1391:                 else:
+1392:                     columns.append(str(c))
+1393:             except Exception:
+1394:                 columns.append(str(c))
+1395: 
+1396:         rows = {}
+1397:         for idx in df.index:
+1398:             label = str(idx).replace("_", " ").replace("  ", " ").strip()
+1399:             vals = []
+1400:             for v in df.loc[idx].values:
+1401:                 try:
+1402:                     if isinstance(v, float) and (np.isnan(v) or np.isinf(v)):
+1403:                         vals.append(None)
+1404:                     elif isinstance(v, (int, float)):
+1405:                         vals.append(round(float(v), 2))
+1406:                     else:
+1407:                         vals.append(v)
+1408:                 except Exception:
+1409:                     vals.append(None)
+1410:             rows[label] = vals
+1411:         return {"columns": columns, "rows": {}}
+1412:     except Exception:
+1413:         return {"columns": [], "rows": {}}
+1414: 
+1415: 
+1416: # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+1417: #  STATIC FILE SERVING (React SPA)
+1418: @app.route("/api/log-error", methods=["POST"])
+1419: def log_frontend_error():
+1420:     payload = request.get_json(silent=True) or {}
+1421:     msg = payload.get("message", "?")
+1422:     stack = payload.get("stack", "")
+1423:     print(f"\n{'='*60}")
+1424:     print(f"  FRONTEND ERROR: {msg}")
+1425:     if stack:
+1426:         for line in stack.split("\n")[:15]:
+1427:             print(f"    {line}")
+1428:     print(f"{'='*60}\n")
+1429:     # Also write to file so we can read it from a background process
+1430:     try:
+1431:         with open("frontend_error.log", "a") as f:
+1432:             f.write(f"\n{'='*60}\n")
+1433:             f.write(f"  FRONTEND ERROR: {msg}\n")
+1434:             if stack:
+1435:                 for line in stack.split("\n")[:20]:
+1436:                     f.write(f"    {line}\n")
+1437:             f.write(f"{'='*60}\n")
+1438:     except:
+1439:         pass
+1440:     return jsonify({"ok": True})
+1441: 
+1442: 
+1443: # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+1444: 
+1445: @app.route("/")
+1446: def serve_index():
+1447:     return send_from_directory("frontend/dist", "index.html")
+1448: 
+1449: 
+1450: @app.route("/assets/<path:path>")
+1451: def serve_assets(path):
+1452:     return send_from_directory("frontend/dist/assets", path)
+1453: 
+1454: 
+1455: @app.route("/<path:path>", methods=["GET"])
+1456: def serve_spa_fallback(path):
+1457:     """Catch-all SPA fallback â€” every non-API GET returns index.html
+1458:     so client-side routing works inside the React app."""
+1459:     if path.startswith("api/") or path.startswith("analyze-view"):
+1460:         return jsonify({"error": "Not found"}), 404
+1461:     filepath = os.path.join("frontend", "dist", path)
+1462:     if os.path.isfile(filepath):
+1463:         return send_from_directory("frontend/dist", path)
+1464:     return send_from_directory("frontend/dist", "index.html")
+1465: 
+1466: 
+1467: if __name__ == "__main__":
+1468:     app.run(debug=True, use_reloader=False, threaded=True, port=5000)
+1469: 
+The above content does NOT show the entire file contents. If you need to view any lines of the file which were not shown to complete your task, call this tool again to view those lines.
+
+==================================================
+Created At: 2026-08-15T04:33:32Z
+Completed At: 2026-08-15T04:33:32Z
+File Path: `file:///c:/Users/ROHEET/Desktop/EquityFundamentalEngine%20-%20Original/app.py`
+Total Lines: 1469
+Total Bytes: 65024
+Showing lines 1 to 240
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+1: from flask import Flask, jsonify, request, render_template, send_from_directory
+2: from flask_cors import CORS
+3: import json
+4: import numpy as np
+5: import pandas as pd
+6: import requests
+7: import os
+8: import subprocess
+9: from pathlib import Path
+10: import re
+11: import threading
+12: 
+13: # â”€â”€ Google Sheets services (primary data source) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+14: from services.google_sheets_service import build_sheet_payload, search_master_index
+15: from services.screener_csv_importer import import_screener_csv
+16: from services.screener_local_service import (
+17:     get_local_screener_status,
+18:     run_local_screener,
+19:     sync_screener_symbol,
+20:     sync_screener_universe,
+21: )
+22: 
+23: # â”€â”€ yfinance services (fallback) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+24: from services.yf_services import get_stock_data
+25: from analysis.technicals import get_technicals
+26: from analysis.old_engine import get_old_data
+27: from analysis.fundamentals import get_fundamentals
+28: 
+29: import yfinance as yf
+30: 
+31: app = Flask(__name__, static_folder=None)
+32: CORS(app)
+33: SPREADSHEET_METRIC_CACHE_PATH = Path(__file__).resolve().parent / "screener_metric_cache.jsonl"
+34: YAHOO_METRIC_CACHE_PATH = Path(__file__).resolve().parent / "screener_yahoo_metric_cache.jsonl"
+35: AI_AGENT_ROOT = Path(__file__).resolve().parent.parent / "Projects" / "Stock-Market-Agent"
+36: AI_AGENT_BACKEND = "http://127.0.0.1:8000"
+37: AI_AGENT_FRONTEND = "http://127.0.0.1:5173"
+38: AI_AGENT_PROCESSES = []
+39: RISKDESK_ROOT = Path(__file__).resolve().parent.parent / "Projects" / "riskdesk"
+40: RISKDESK_BACKEND = "http://127.0.0.1:8001"
+41: RISKDESK_FRONTEND = "http://127.0.0.1:5174"
+42: RISKDESK_PROCESSES = []
+43: 
+44: 
+45: # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+46: #  HELPERS
+47: # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+48: 
+49: def sanitize_json(value):
+50:     """Recursively sanitize a JSON-serialisable structure, converting
+51:     numpy types to plain Python types and filtering NaN / Inf."""
+52:     if isinstance(value, dict):
+53:         return {key: sanitize_json(item) for key, item in value.items()}
+54:     if isinstance(value, list):
+55:         return [sanitize_json(item) for item in value]
+56:     if isinstance(value, tuple):
+57:         return [sanitize_json(item) for item in value]
+58:     if isinstance(value, np.bool_):
+59:         return bool(value)
+60:     if isinstance(value, np.integer):
+61:         return int(value)
+62:     if isinstance(value, np.floating):
+63:         if np.isnan(value) or np.isinf(value):
+64:             return None
+65:         return float(value)
+66:     if isinstance(value, float):
+67:         if np.isnan(value) or np.isinf(value):
+68:             return None
+69:     return value
+70: 
+71: 
+72: def _url_is_live(url, timeout=1.5):
+73:     try:
+74:         response = requests.get(url, timeout=timeout)
+75:         return response.status_code < 500
+76:     except Exception:
+77:         return False
+78: 
+79: 
+80: def _start_hidden_process(args, cwd, log_name, env=None, log_root=AI_AGENT_ROOT):
+81:     log_path = log_root / log_name
+82:     log_file = open(log_path, "a", encoding="utf-8")
+83:     creationflags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+84:     process = subprocess.Popen(
+85:         args,
+86:         cwd=str(cwd),
+87:         env=env,
+88:         stdout=log_file,
+89:         stderr=subprocess.STDOUT,
+90:         stdin=subprocess.DEVNULL,
+91:         creationflags=creationflags,
+92:     )
+93:     AI_AGENT_PROCESSES.append((process, log_file))
+94:     return process
+95: 
+96: 
+97: def _start_ai_agent_servers():
+98:     if not AI_AGENT_ROOT.exists():
+99:         return False, f"AI project folder not found: {AI_AGENT_ROOT}"
+100: 
+101:     backend_dir = AI_AGENT_ROOT / "backend"
+102:     frontend_dir = AI_AGENT_ROOT / "frontend"
+103:     python_exe = AI_AGENT_ROOT / "venv" / "Scripts" / "python.exe"
+104:     if not python_exe.exists():
+105:         return False, f"AI agent virtual environment not found: {python_exe}"
+106:     if not (frontend_dir / "package.json").exists():
+107:         return False, f"AI agent frontend package.json not found: {frontend_dir}"
+108: 
+109:     backend_live = _url_is_live(f"{AI_AGENT_BACKEND}/docs")
+110:     frontend_live = _url_is_live(AI_AGENT_FRONTEND)
+111: 
+112:     if not backend_live:
+113:         _start_hidden_process(
+114:             [str(python_exe), "-m", "uvicorn", "app:app", "--host", "127.0.0.1", "--port", "8000"],
+115:             backend_dir,
+116:             "ai-agent-backend.log",
+117:         )
+118: 
+119:     if not frontend_live:
+120:         env = os.environ.copy()
+121:         env["VITE_API_BASE"] = AI_AGENT_BACKEND
+122:         _start_hidden_process(
+123:             ["cmd.exe", "/c", "npm", "run", "dev", "--", "--host", "127.0.0.1", "--port", "5173"],
+124:             frontend_dir,
+125:             "ai-agent-frontend.log",
+126:             env=env,
+127:         )
+128: 
+129:     return True, "AI agent launch requested."
+130: 
+131: 
+132: def _start_riskdesk_servers():
+133:     if not RISKDESK_ROOT.exists():
+134:         return False, f"RiskDesk project folder not found: {RISKDESK_ROOT}"
+135: 
+136:     backend_dir = RISKDESK_ROOT / "backend"
+137:     frontend_dir = RISKDESK_ROOT
+138:     if not (backend_dir / "app" / "main.py").exists():
+139:         return False, f"RiskDesk backend was not found: {backend_dir}"
+140:     if not (frontend_dir / "package.json").exists():
+141:         return False, f"RiskDesk frontend package.json not found: {frontend_dir}"
+142: 
+143:     python_exe = (subprocess.check_output(["where", "python"], text=True).splitlines() or ["python"])[0].strip()
+144: 
+145:     backend_live = _url_is_live(f"{RISKDESK_BACKEND}/health")
+146:     frontend_live = _url_is_live(RISKDESK_FRONTEND)
+147: 
+148:     if not backend_live:
+149:         dependency_check = subprocess.run(
+150:             [python_exe, "-c", "import fastapi, uvicorn, sqlalchemy, pydantic_settings, aiosqlite"],
+151:             cwd=str(backend_dir),
+152:             stdout=subprocess.DEVNULL,
+153:             stderr=subprocess.DEVNULL,
+154:         )
+155:         if dependency_check.returncode != 0:
+156:             install_result = subprocess.run(
+157:                 [python_exe, "-m", "pip", "install", "-r", str(backend_dir / "requirements.txt")],
+158:                 cwd=str(backend_dir),
+159:             )
+160:             if install_result.returncode != 0:
+161:                 return False, "RiskDesk backend dependency installation failed."
+162: 
+163:         env = os.environ.copy()
+164:         env["CORS_ORIGINS"] = f"http://localhost:5174,http://127.0.0.1:5174"
+165:         process = _start_hidden_process(
+166:             [python_exe, "-m", "uvicorn", "app.main:app", "--host", "127.0.0.1", "--port", "8001"],
+167:             backend_dir,
+168:             "riskdesk-backend.log",
+169:             env=env,
+170:             log_root=RISKDESK_ROOT,
+171:         )
+172:         RISKDESK_PROCESSES.append(process)
+173: 
+174:     if not frontend_live:
+175:         if not (frontend_dir / "node_modules").exists():
+176:             install_result = subprocess.run(["cmd.exe", "/c", "npm", "install"], cwd=str(frontend_dir))
+177:             if install_result.returncode != 0:
+178:                 return False, "RiskDesk frontend dependency installation failed."
+179: 
+180:         env = os.environ.copy()
+181:         env["VITE_API_BASE"] = RISKDESK_BACKEND
+182:         process = _start_hidden_process(
+183:             ["cmd.exe", "/c", "npm", "run", "dev", "--", "--host", "127.0.0.1", "--port", "5174"],
+184:             frontend_dir,
+185:             "riskdesk-frontend.log",
+186:             env=env,
+187:             log_root=RISKDESK_ROOT,
+188:         )
+189:         RISKDESK_PROCESSES.append(process)
+190: 
+191:     return True, "RiskDesk launch requested."
+192: 
+193: 
+194: # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+195: #  BLOOMBERG-FRONTEND API  (Google Sheets primary)
+196: # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+197: 
+198: @app.route("/api/search", methods=["GET"])
+199: def search():
+200:     """Search the master index (Google Sheets)."""
+201:     query = request.args.get("q", "").strip()
+202:     if len(query) < 2:
+203:         return jsonify([])
+204:     try:
+205:         return jsonify(search_master_index(query))
+206:     except Exception as exc:
+207:         return jsonify({"error": str(exc)}), 500
+208: 
+209: 
+210: @app.route("/api/analyze", methods=["GET"])
+211: def analyze():
+212:     """Full analysis payload consumed by the Bloomberg-style frontend.
+213: 
+214:     Uses the Google Sheets service as the primary data source (via
+215:     ``build_sheet_payload``) and falls back to yahoo-finance data when
+216:     sheet data is unavailable.
+217:     """
+218:     query = (
+219:         request.args.get("ticker", "").strip()
+220:         or request.args.get("q", "").strip()
+221:     )
+222:     if not query:
+223:         return jsonify({"error": "No company name provided"}), 400
+224: 
+225:     try:
+226:         payload = build_sheet_payload(query, get_stock_data, get_technicals)
+227:         if not payload:
+228:             return jsonify({"error": "TICKER NOT FOUND IN INDEX"}), 404
+229:         return jsonify(sanitize_json(payload))
+230:     except Exception as exc:
+231:         import traceback
+232:         return jsonify({"error": str(exc), "trace": traceback.format_exc()}), 500
+233: 
+234: 
+235: @app.route("/api/price-history", methods=["GET"])
+236: def price_history():
+237:     """OHLCV price history for the candlestick/line chart."""
+238:     symbol = request.args.get("symbol", "").strip().upper()
+239:     period = request.args.get("period", "1y")
+240:     if not symbol:
+The above content does NOT show the entire file contents. If you need to view any lines of the file which were not shown to complete your task, call this tool again to view those lines.
+
+==================================================
+Created At: 2026-08-15T04:36:27Z
+Completed At: 2026-08-15T04:36:27Z
+File Path: `file:///c:/Users/ROHEET/Desktop/EquityFundamentalEngine%20-%20Original/app.py`
+Total Lines: 38
+Total Bytes: 1131
+Showing lines 38 to 38
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+38:     app.run(debug=True)
+The above content does NOT show the entire file contents. If you need to view any lines of the file which were not shown to complete your task, call this tool again to view those lines.
+
+==================================================

@@ -1,0 +1,913 @@
+{
+  "analyst": {
+    "consensus": "strong_buy",
+    "ratingsCount": 38,
+    "targetPrice": 1195.0
+  },
+  "charts": {
+    "annual": [
+      {
+        "grossMargin": 84.13,
+        "netMargin": 0.1,
+        "netProfit": 241.23,
+        "operatingMargin": 36.79,
+        "operatingProfit": 84781.01,
+        "period": "FY2017",
+        "sales": 230447.1
+      },
+      {
+        "grossMargin": 84.11,
+        "netMargin": -1.99,
+        "netProfit": -4556.29,
+        "operatingMargin": 26.16,
+        "operatingProfit": 59905.75,
+        "period": "FY2018",
+        "sales": 228970.28
+      },
+      {
+        "grossMargin": 82.29,
+        "netMargin": 0.91,
+        "netProfit": 2299.64,
+        "operatingMargin": 34.43,
+        "operatingProfit": 87218.65,
+        "period": "FY2019",
+        "sales": 253322.17
+      },
+      {
+        "grossMargin": 81.48,
+        "netMargin": 7.33,
+        "netProfit": 19767.8,
+        "operatingMargin": 35.92,
+        "operatingProfit": 96942.96,
+        "period": "FY2020",
+        "sales": 269851.66
+      },
+      {
+        "grossMargin": 80.06,
+        "netMargin": 8.06,
+        "netProfit": 22405.46,
+        "operatingMargin": 30.67,
+        "operatingProfit": 85294.79,
+        "period": "FY2021",
+        "sales": 278115.48
+      },
+      {
+        "grossMargin": 78.39,
+        "netMargin": 12.2,
+        "netProfit": 35373.88,
+        "operatingMargin": 31.94,
+        "operatingProfit": 92623.84,
+        "period": "FY2022",
+        "sales": 289972.69
+      },
+      {
+        "grossMargin": 81.98,
+        "netMargin": 15.86,
+        "netProfit": 55648.17,
+        "operatingMargin": 41.77,
+        "operatingProfit": 146541.42,
+        "period": "FY2023",
+        "sales": 350844.58
+      },
+      {
+        "grossMargin": 80.62,
+        "netMargin": 15.27,
+        "netProfit": 67084.67,
+        "operatingMargin": 45.41,
+        "operatingProfit": 199438.83,
+        "period": "FY2024",
+        "sales": 439188.51
+      },
+      {
+        "grossMargin": 85.34,
+        "netMargin": 15.8,
+        "netProfit": 77561.34,
+        "operatingMargin": 48.66,
+        "operatingProfit": 238894.58,
+        "period": "FY2025",
+        "sales": 490937.79
+      },
+      {
+        "grossMargin": 85.87,
+        "netMargin": 16.18,
+        "netProfit": 83298.78,
+        "operatingMargin": 44.92,
+        "operatingProfit": 231321.85,
+        "period": "FY2026",
+        "sales": 514932.59
+      }
+    ],
+    "quarterly": [
+      {
+        "netProfit": 11064.14,
+        "operatingProfit": 50233.47,
+        "period": "Dec 2023",
+        "sales": 112868.34
+      },
+      {
+        "netProfit": 21384.15,
+        "operatingProfit": 52050.9,
+        "period": "Mar 2024",
+        "sales": 117469.38
+      },
+      {
+        "netProfit": 19324.96,
+        "operatingProfit": 64245.95,
+        "period": "Jun 2024",
+        "sales": 118242.45
+      },
+      {
+        "netProfit": 19782.76,
+        "operatingProfit": 58335.37,
+        "period": "Sep 2024",
+        "sales": 121044.68
+      },
+      {
+        "netProfit": 18853.16,
+        "operatingProfit": 59763.23,
+        "period": "Dec 2024",
+        "sales": 124653.66
+      },
+      {
+        "netProfit": 19600.46,
+        "operatingProfit": 52401.76,
+        "period": "Mar 2025",
+        "sales": 126840.21
+      },
+      {
+        "netProfit": 21201.47,
+        "operatingProfit": 66232.44,
+        "period": "Jun 2025",
+        "sales": 125728.68
+      },
+      {
+        "netProfit": 21137.33,
+        "operatingProfit": 55775.15,
+        "period": "Sep 2025",
+        "sales": 128040.5
+      },
+      {
+        "netProfit": 21317.11,
+        "operatingProfit": 53586.88,
+        "period": "Dec 2025",
+        "sales": 130385.95
+      },
+      {
+        "netProfit": 19642.87,
+        "operatingProfit": 56030.04,
+        "period": "Mar 2026",
+        "sales": 131080.12
+      }
+    ]
+  },
+  "company": {
+    "currentPriceSheet": 974.6,
+    "faceValue": 1.0,
+    "industry": "Banks - Regional",
+    "marketCapSheetCr": 899708.4,
+    "name": "STATE BANK OF INDIA",
+    "query": "sbi",
+    "sector": "Financial Services",
+    "sheetId": "1YmJMYU2npU3t7dCKSYqfWq4eOHYPzs_ZahGgMd359xA",
+    "sheetUrl": "https://docs.google.com/spreadsheets/d/1YmJMYU2npU3t7dCKSYqfWq4eOHYPzs_ZahGgMd359xA",
+    "ticker": "SBIN.NS"
+  },
+  "derived": {
+    "accrualRatio": -0.0054,
+    "bookValuePerShare": 645.8203,
+    "ebit": null,
+    "ebitda": 231321.85,
+    "netDebt": 6551717.53,
+    "netDebtToEbitda": 28.323,
+    "piotroski": 5,
+    "profitCagr10Y": null,
+    "profitCagr3Y": 14.39,
+    "profitCagr5Y": 30.03,
+    "profitYoy": 7.4,
+    "revenueCagr10Y": null,
+    "revenueCagr3Y": 13.64,
+    "revenueCagr5Y": 13.11,
+    "revenueYoy": 4.89
+  },
+  "metricsGrid": [
+    {
+      "delta": null,
+      "label": "ROE",
+      "suffix": "%",
+      "value": 13.97
+    },
+    {
+      "delta": null,
+      "label": "ROCE",
+      "suffix": "%",
+      "value": 1.11
+    },
+    {
+      "delta": null,
+      "label": "Net Margin",
+      "suffix": "%",
+      "value": 16.18
+    },
+    {
+      "delta": null,
+      "label": "Operating Margin",
+      "suffix": "%",
+      "value": 44.92
+    },
+    {
+      "delta": null,
+      "label": "Debt/Equity",
+      "suffix": "x",
+      "value": 11.4411
+    },
+    {
+      "delta": null,
+      "label": "Interest Coverage",
+      "suffix": "x",
+      "value": null
+    },
+    {
+      "delta": null,
+      "label": "CFO/PAT",
+      "suffix": "x",
+      "value": 0.4574
+    },
+    {
+      "delta": null,
+      "label": "FCF Yield",
+      "suffix": "%",
+      "value": null
+    },
+    {
+      "delta": null,
+      "label": "Revenue Growth 3Y CAGR",
+      "suffix": "%",
+      "value": 13.64
+    },
+    {
+      "delta": null,
+      "label": "PAT Growth 3Y CAGR",
+      "suffix": "%",
+      "value": 14.39
+    },
+    {
+      "delta": null,
+      "label": "EPS TTM",
+      "suffix": "",
+      "value": 91.12
+    },
+    {
+      "delta": null,
+      "label": "Book Value",
+      "suffix": "",
+      "value": 645.8203
+    },
+    {
+      "delta": null,
+      "label": "Dividend Yield",
+      "suffix": "%",
+      "value": 1.79
+    },
+    {
+      "delta": null,
+      "label": "Piotroski Score",
+      "suffix": "/9",
+      "value": 5
+    },
+    {
+      "delta": null,
+      "label": "Promoter Holding",
+      "suffix": "%",
+      "value": 57.0
+    },
+    {
+      "delta": null,
+      "label": "FII Holding",
+      "suffix": "%",
+      "value": 29.28
+    }
+  ],
+  "ownership": {
+    "dii": null,
+    "fii": 29.28,
+    "mfSchemes": null,
+    "period": "Latest available",
+    "promoter": 57.0,
+    "promoterChangeQoq": null,
+    "promoterPledge": null,
+    "public": 13.72,
+    "source": "Yahoo Finance proxies"
+  },
+  "price": {
+    "change": 1.6,
+    "changePct": 0.17,
+    "current": 971.2,
+    "volume": 7525546,
+    "weekHigh": 1234.7,
+    "weekLow": 781.7
+  },
+  "quarterly": {
+    "columns": [
+      "Dec 2023",
+      "Mar 2024",
+      "Jun 2024",
+      "Sep 2024",
+      "Dec 2024",
+      "Mar 2025",
+      "Jun 2025",
+      "Sep 2025",
+      "Dec 2025",
+      "Mar 2026"
+    ],
+    "rows": {
+      "Depreciation": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "Expenses": [
+        62634.87,
+        65418.48,
+        53996.5,
+        62709.31,
+        64890.43,
+        74438.45,
+        59496.24,
+        72265.35,
+        76799.07,
+        75050.08
+      ],
+      "Interest": [
+        68091.94,
+        70644.02,
+        71700.78,
+        73618.76,
+        77396.74,
+        78227.05,
+        78266.46,
+        78002.37,
+        78782.55,
+        79953.43
+      ],
+      "Net Profit": [
+        11064.14,
+        21384.15,
+        19324.96,
+        19782.76,
+        18853.16,
+        19600.46,
+        21201.47,
+        21137.33,
+        21317.11,
+        19642.87
+      ],
+      "Operating Profit": [
+        50233.47,
+        52050.9,
+        64245.95,
+        58335.37,
+        59763.23,
+        52401.76,
+        66232.44,
+        55775.15,
+        53586.88,
+        56030.04
+      ],
+      "Other Income": [
+        33103.3,
+        47444.98,
+        33882.6,
+        42757.7,
+        43199.91,
+        52722.11,
+        41263.14,
+        50883.86,
+        55262.38,
+        49998.9
+      ],
+      "PBT": [
+        15244.83,
+        28851.86,
+        26427.77,
+        27474.31,
+        25566.4,
+        26896.82,
+        29229.12,
+        28656.64,
+        30066.71,
+        26075.51
+      ],
+      "Sales": [
+        112868.34,
+        117469.38,
+        118242.45,
+        121044.68,
+        124653.66,
+        126840.21,
+        125728.68,
+        128040.5,
+        130385.95,
+        131080.12
+      ],
+      "Tax": [
+        3962.17,
+        7115.39,
+        6746.97,
+        7254.69,
+        6391.05,
+        6955.43,
+        7602.48,
+        7152.15,
+        8190.67,
+        5914.21
+      ]
+    }
+  },
+  "statements": {
+    "annualPnl": {
+      "columns": [
+        "FY2017",
+        "FY2018",
+        "FY2019",
+        "FY2020",
+        "FY2021",
+        "FY2022",
+        "FY2023",
+        "FY2024",
+        "FY2025",
+        "FY2026"
+      ],
+      "rows": {
+        "Depreciation": [
+          2914.68,
+          3105.07,
+          3495.89,
+          3661.56,
+          3711.06,
+          3691.27,
+          3695.6,
+          3849.12,
+          3991.48,
+          null
+        ],
+        "Dividend Payout %": [
+          859.39,
+          null,
+          null,
+          null,
+          15.93,
+          17.91,
+          18.12,
+          18.23,
+          18.3,
+          19.23
+        ],
+        "EPS": [
+          0.3025,
+          -5.1053,
+          2.5767,
+          22.1498,
+          25.1053,
+          39.6364,
+          62.3537,
+          75.1683,
+          86.9074,
+          90.242
+        ],
+        "Expenses": [
+          145666.09,
+          169064.53,
+          166103.52,
+          172908.7,
+          192820.69,
+          197348.85,
+          204303.16,
+          239749.68,
+          252043.21,
+          283610.74
+        ],
+        "Interest": [
+          149114.67,
+          146602.98,
+          155867.46,
+          161123.8,
+          156010.17,
+          156194.34,
+          189980.82,
+          259736.05,
+          300943.34,
+          315004.81
+        ],
+        "Net Profit": [
+          241.23,
+          -4556.29,
+          2299.64,
+          19767.8,
+          22405.46,
+          35373.88,
+          55648.17,
+          67084.67,
+          77561.34,
+          83298.78
+        ],
+        "OPM %": [
+          36.79,
+          26.16,
+          34.43,
+          35.92,
+          30.67,
+          31.94,
+          41.77,
+          45.41,
+          48.66,
+          44.92
+        ],
+        "Operating Profit": [
+          84781.01,
+          59905.75,
+          87218.65,
+          96942.96,
+          85294.79,
+          92623.84,
+          146541.42,
+          199438.83,
+          238894.58,
+          231321.85
+        ],
+        "Other Income": [
+          68193.17,
+          77557.39,
+          77365.19,
+          98158.99,
+          107222.41,
+          117000.4,
+          122533.56,
+          155386.39,
+          172405.53,
+          197710.94
+        ],
+        "PBT": [
+          944.83,
+          -12244.91,
+          5220.49,
+          30316.59,
+          32795.97,
+          49738.63,
+          75398.56,
+          91240.05,
+          106365.29,
+          114027.98
+        ],
+        "Sales": [
+          230447.1,
+          228970.28,
+          253322.17,
+          269851.66,
+          278115.48,
+          289972.69,
+          350844.58,
+          439188.51,
+          490937.79,
+          514932.59
+        ],
+        "Tax": [
+          1335.5,
+          -8057.5,
+          2151.41,
+          12139.76,
+          8516.25,
+          13382.46,
+          18840.13,
+          23101.79,
+          27348.14,
+          28859.51
+        ]
+      }
+    },
+    "balanceSheet": {
+      "columns": [
+        "FY2017",
+        "FY2018",
+        "FY2019",
+        "FY2020",
+        "FY2021",
+        "FY2022",
+        "FY2023",
+        "FY2024",
+        "FY2025",
+        "FY2026"
+      ],
+      "rows": {
+        "Borrowings": [
+          2936176.32,
+          3091257.62,
+          3354288.72,
+          3607061.3,
+          4149127.45,
+          4536570.38,
+          4989687.46,
+          5606146.99,
+          6050755.27,
+          6820399.27
+        ],
+        "CWIP": [
+          694.92,
+          925.07,
+          762.3,
+          469.76,
+          116.35,
+          27.57,
+          66.02,
+          42.45,
+          41.4,
+          null
+        ],
+        "Cash & Bank": [
+          146076.35,
+          134973.43,
+          158218.46,
+          146633.51,
+          189807.29,
+          296525.21,
+          225692.63,
+          206766.69,
+          208893.69,
+          268681.74
+        ],
+        "Equity Capital": [
+          797.35,
+          892.46,
+          892.46,
+          892.46,
+          892.46,
+          892.46,
+          892.46,
+          892.46,
+          892.46,
+          923.06
+        ],
+        "Investments": [
+          1027280.87,
+          1183794.24,
+          1119269.82,
+          1228284.28,
+          1595100.27,
+          1776489.9,
+          1913107.86,
+          2110548.23,
+          2205601.11,
+          2359502.17
+        ],
+        "Net Block": [
+          51189.24,
+          42034.79,
+          39940.76,
+          39608.41,
+          41600.44,
+          41032.49,
+          45879.72,
+          46071.69,
+          47715.97,
+          57152.1
+        ],
+        "Net Debt": [
+          2790099.97,
+          2956284.19,
+          3196070.26,
+          3460427.79,
+          3959320.16,
+          4240045.17,
+          4763994.83,
+          5399380.3,
+          5841861.58,
+          6551717.53
+        ],
+        "Other Assets": [
+          2362594.48,
+          2389685.07,
+          2728487.15,
+          2929123.28,
+          3208797.78,
+          3543327.88,
+          3995360.91,
+          4577093.22,
+          5060371.42,
+          5904914.3
+        ],
+        "Other Liabilities": [
+          288391.04,
+          294859.6,
+          299675.65,
+          339364.31,
+          420925.83,
+          518719.42,
+          605795.73,
+          712669.43,
+          775937.87,
+          905038.43
+        ],
+        "ROCE %": [
+          2.6,
+          1.71,
+          2.33,
+          2.42,
+          1.84,
+          1.84,
+          2.67,
+          3.25,
+          3.59,
+          null
+        ],
+        "ROE %": [
+          0.11,
+          -1.98,
+          0.98,
+          7.87,
+          8.13,
+          11.58,
+          15.5,
+          16.17,
+          15.93,
+          13.97
+        ],
+        "Receivables": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "Reserves": [
+          216394.8,
+          229429.49,
+          233603.2,
+          250167.66,
+          274669.1,
+          304695.58,
+          358038.86,
+          414046.71,
+          486144.3,
+          595207.81
+        ],
+        "Total Assets": [
+          3441759.51,
+          3616439.17,
+          3888460.03,
+          4197485.73,
+          4845614.84,
+          5360877.84,
+          5954414.51,
+          6733755.59,
+          7313729.9,
+          8321568.57
+        ],
+        "Total Liabilities": [
+          3441759.51,
+          3616439.17,
+          3888460.03,
+          4197485.73,
+          4845614.84,
+          5360877.84,
+          5954414.51,
+          6733755.59,
+          7313729.9,
+          8321568.57
+        ]
+      }
+    },
+    "cashFlow": {
+      "columns": [
+        "FY2017",
+        "FY2018",
+        "FY2019",
+        "FY2020",
+        "FY2021",
+        "FY2022",
+        "FY2023",
+        "FY2024",
+        "FY2025",
+        "FY2026"
+      ],
+      "rows": {
+        "CFO/PAT Ratio": [
+          320.8805,
+          21.1812,
+          12.8525,
+          1.2105,
+          4.0133,
+          1.631,
+          -1.5457,
+          0.3225,
+          0.6251,
+          0.4574
+        ],
+        "Cash from Financing": [
+          -4196.48,
+          5547.16,
+          447.64,
+          5429.52,
+          7142.67,
+          -3844.51,
+          6386.38,
+          -9896.28,
+          -13739.08,
+          -3427.14
+        ],
+        "Cash from Investing": [
+          -4571.83,
+          13052.7,
+          219.51,
+          -555.05,
+          -3669.83,
+          -2652.25,
+          -965.91,
+          -3475.76,
+          -3386.58,
+          -690.88
+        ],
+        "Cash from Operations": [
+          77406.0,
+          -96507.91,
+          29556.01,
+          23928.53,
+          89918.93,
+          57694.85,
+          -86013.68,
+          21632.43,
+          48486.29,
+          38097.39
+        ],
+        "FCF": [
+          null,
+          -90458.53,
+          28154.15,
+          20599.32,
+          84215.84,
+          54571.53,
+          -94556.51,
+          17591.34,
+          42850.53,
+          null
+        ],
+        "Net Cash Flow": [
+          68637.69,
+          -77908.05,
+          30223.16,
+          28803.0,
+          93391.77,
+          51198.09,
+          -80593.21,
+          8260.39,
+          31360.64,
+          33979.37
+        ]
+      }
+    }
+  },
+  "technicals": {
+    "above200Dma": true,
+    "ema_crossover": "No Crossover",
+    "from52WeekHighPct": -19.47,
+    "macdSignal": "Neutral",
+    "obv": 283701744,
+    "price_vs_ema55": "Below EMA55",
+    "returns": {
+      "1M": -9.39,
+      "1Y": null,
+      "3M": -18.69,
+      "6M": 1.67
+    },
+    "rsi": 23.0,
+    "rsi_status": "Oversold",
+    "sma20": 994.02,
+    "sma200": 964.86,
+    "sma50": 1023.03,
+    "trend": "Downtrend",
+    "volume": 7525546
+  },
+  "timestamp": "26 May 2026 06:18 UTC",
+  "valuation": {
+    "beta": 0.471,
+    "dividendYield": 1.79,
+    "enterpriseValueCr": 1289227.86,
+    "epsTtm": 91.12,
+    "evEbitda": 5.5733,
+    "forwardEps": 102.08002,
+    "forwardPe": 9.514105,
+    "marketCapCr": 896477.64,
+    "pb": 1.5142797,
+    "peTtm": 10.658472
+  }
+}

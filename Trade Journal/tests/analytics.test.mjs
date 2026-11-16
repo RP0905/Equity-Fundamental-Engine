@@ -1,0 +1,7 @@
+import test from 'node:test';import assert from 'node:assert/strict';import { analyzeTrades } from '../src/analytics.js';
+const t=(id,pnl,time='2026-08-10T09:00:00Z',userId='a')=>({id,userId,entryTime:time,exitTime:'2026-08-10T09:30:00Z',pnl,volume:10,fees:1});
+test('empty data is safe',()=>{let a=analyzeTrades('a',[]);assert.equal(a.summary.totalTrades,0);assert.equal(a.summary.profitFactor,null);assert.equal(a.dailyStats.length,0)});
+test('isolates users and calculates summary',()=>{let a=analyzeTrades('a',[t('1',100),t('2',-50),t('3',999,'2026-08-10T09:00:00Z','b')]);assert.equal(a.summary.totalTrades,2);assert.equal(a.summary.netPnl,50);assert.equal(a.summary.winRate,50);assert.equal(a.summary.profitFactor,2)});
+test('keeps break-even days outside win rate',()=>{let a=analyzeTrades('a',[t('1',0),t('2',0,'2026-08-11T09:00:00Z')]);assert.equal(a.summary.winRate,0);assert.equal(a.tradeFrequency.find(x=>x.label==='1').breakEven,2)});
+test('uses entry time for two-hour weekday heatmap slots',()=>{let a=analyzeTrades('a',[t('1',10,'2026-08-10T09:00:00Z')]);assert.equal(a.heatmap[0][4].trades,1);assert.equal(a.heatmap[0][4].wins,1)});
+test('handles missing optional fields and open trades',()=>{let a=analyzeTrades('a',[{id:'1',userId:'a',entryTime:'2026-08-10T09:00:00Z'}]);assert.equal(a.summary.totalTrades,1);assert.equal(a.summary.totalVolume,null);assert.equal(a.summary.averageHoldingMinutes,null)});

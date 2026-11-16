@@ -1,0 +1,6 @@
+import { createServer } from 'node:http';
+import { readFileSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { extname, join } from 'node:path';
+const type={'.html':'text/html','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.json':'application/json'};
+const store=join('data','manual-trades.json');mkdirSync('data',{recursive:true});if(!existsSync(store))writeFileSync(store,'[]');
+createServer((req,res)=>{if(req.url==='/api/trades'&&req.method==='GET'){res.setHeader('Content-Type','application/json');res.end(readFileSync(store));return}if(req.url==='/api/trades'&&req.method==='POST'){let body='';req.on('data',x=>body+=x);req.on('end',()=>{try{const trade=JSON.parse(body),items=JSON.parse(readFileSync(store));items.unshift(trade);writeFileSync(store,JSON.stringify(items,null,2));res.writeHead(201,{'Content-Type':'application/json'});res.end(JSON.stringify({ok:true}))}catch{res.writeHead(400);res.end(JSON.stringify({ok:false}))}});return}let path=join('src',req.url.split('?')[0]==='/'?'index.html':req.url.split('?')[0]);if(!existsSync(path))path='src/index.html';res.setHeader('Content-Type',type[extname(path)]||'text/plain');res.end(readFileSync(path));}).listen(4173,()=>console.log('Arc running at http://localhost:4173'));

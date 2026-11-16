@@ -171,7 +171,7 @@
             <p class="text-slate-400 mb-10 text-base md:text-lg max-w-xl mx-auto leading-relaxed">Enter a ticker symbol
                 to analyze real-time fundamental and technical metrics powered by advanced market data.</p>
 
-            <form method="POST" action="/" class="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto">
+            <form method="POST" action="/analyze-view" class="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto">
                 <div class="relative flex-grow">
                     <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
                         <svg class="h-6 w-6 text-slate-500 group-focus-within:text-blue-400 transition-colors"
@@ -221,7 +221,7 @@
             <div>
                 <p class="text-slate-400 text-sm font-semibold uppercase tracking-widest mb-2 text-blue-400">Analysis
                     Results For</p>
-                <h2 class="text-5xl md:text-6xl font-black text-white tracking-tighter">{{ request.form.ticker }}</h2>
+                <h2 class="text-5xl md:text-6xl font-black text-white tracking-tighter">{{ ticker }}</h2>
             </div>
             <div class="mt-4 md:mt-0">
                 <div
@@ -382,9 +382,6 @@
                     <span class="text-lg font-mono font-bold text-slate-100">
                         {% if value is none or value == '' %}
                         N/A
-
-                        {% elif "cagr" in key|lower or "roe" in key|lower or "roce" in key|lower %}
-                        {{ (value * 100) | round(2) }}%
 
                         {% elif value is number %}
                         {{ "{:.2f}".format(value) }}
